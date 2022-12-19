@@ -1,3 +1,4 @@
+import 'package:backend/logic/bindings/auth_binding.dart';
 import 'package:backend/view/screens/about.dart';
 import 'package:backend/view/screens/auth/joinus.dart';
 import 'package:backend/view/screens/auth/login.dart';
@@ -11,13 +12,18 @@ import 'package:get/get.dart';
 class AppRoute {
   static List<GetPage> routes = [
     GetPage(name: Routes.home, page: () => const HomePage()),
-    GetPage(name: Routes.login, page: () => const LoginScreen()),
+    GetPage(
+        name: Routes.login, page: () => LoginScreen(), binding: AuthBinding()),
     GetPage(name: Routes.about, page: () => const AboutPage()),
-    GetPage(name: Routes.joinus, page: () => const JoinusScreen()),
+    GetPage(
+        name: Routes.joinus,
+        page: () => JoinusScreen(),
+        binding: AuthBinding()),
     GetPage(name: Routes.services, page: () => const ServecesScreen()),
     GetPage(name: Routes.coache, page: () => const CoachesScreen()),
     GetPage(name: Routes.profile, page: () => const ProfilePage()),
-    GetPage(name: Routes.coachdescription, page: () => const CoachDescription()),
+    GetPage(
+        name: Routes.coachdescription, page: () => const CoachDescription()),
   ];
 }
 

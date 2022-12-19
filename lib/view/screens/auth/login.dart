@@ -1,10 +1,20 @@
+import 'package:backend/logic/controller/auth_controller.dart';
 import 'package:backend/routes/routes.dart';
+import 'package:backend/utils/my_string.dart';
+import 'package:backend/view/widgets/button.dart';
+import 'package:backend/view/widgets/text_form_feild.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -93,85 +103,99 @@ class LoginScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Stack(children: [
-        Container(
-          // height: MediaQuery.of(context).size.height * .8,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 860, top: 10),
-            child: Image.asset(
-              'assets/images/yello.png',
-            ),
-          ),
-        ),
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 930),
-            child: Image.asset(
-              'assets/images/person2.png',
-            ),
-          ),
-        ),
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 177,
-              top: 250,
-            ),
-            child: Text('Log in',
-                style: TextStyle(
-                    fontSize: 60,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-          ),
-        ),
-        Container(
-          width: 600,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 400),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'User name',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber), //<-- SEE HERE
-                ),
+      body: SingleChildScrollView(
+        child: Stack(children: [
+          Container(
+            // height: MediaQuery.of(context).size.height * .8,
+            // height: 9000,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 930),
+              child: Image.asset(
+                'assets/images/yello.png',
               ),
             ),
           ),
-        ),
-        Container(
-          width: 600,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 450),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'password',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber), //<-- SEE HERE
-                ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 930),
+              child: Image.asset(
+                'assets/images/person2.png',
               ),
             ),
           ),
-        ),
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 530),
-            child: ElevatedButton(
-              child: Text(
-                'Log in',
-                style: TextStyle(fontSize: 18, color: Colors.black),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 177,
+                top: 150,
               ),
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.amber,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2)),
-                  side: BorderSide(
-                      width: 2, color: Color.fromARGB(255, 223, 189, 88)),
-                  padding: EdgeInsets.all(20)),
-              onPressed: () {},
+              child: Text('Talk Us',
+                  style: TextStyle(
+                      fontSize: 60,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
             ),
           ),
-        )
-      ]),
+          Padding(
+            padding: const EdgeInsets.only(top: 270),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+             
+                  AuthTextFormFeild(
+                    hintText: 'Your Email',
+                    obscureText: false,
+                    controller: emailController,
+                    validator: (value) {
+                      // if (!RegExp(validationEmail).hasMatch(value)) {
+                      //   return "Worng E-mail";
+                      // } else {
+                      //   return null;
+                      // }
+                    },
+                  ),
+                  AuthTextFormFeild(
+                    hintText: 'Password',
+                    obscureText: true,
+                    controller: passwordController,
+                  validator: (value) {
+                if (value.toString().length < 6) {
+                  return " Worng password";
+                } else {
+                  return null;
+                }
+              },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GetBuilder<AuthController>(
+            builder: (_) {
+              return AuthButton(
+            onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  String email = emailController.text.trim();
+                  String password = passwordController.text;
+                  controller.displayUserEmail.value = email;
+                  controller.loginUsingFierbase(
+                      email: email, password: password);
+                  // show loding page after press login in button
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Center(child: CircularProgressIndicator());
+                    },
+                  );
+                }
+              },
+                text: 'Log In',
+              );
+            },
+          )
+        ]),
+      ),
     );
   }
 }

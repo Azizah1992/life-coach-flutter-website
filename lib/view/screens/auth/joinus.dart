@@ -1,9 +1,21 @@
+import 'package:backend/logic/controller/auth_controller.dart';
 import 'package:backend/routes/routes.dart';
+import 'package:backend/view/widgets/text_form_feild.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../utils/my_string.dart';
+import '../../widgets/button.dart';
+
 class JoinusScreen extends StatelessWidget {
-  const JoinusScreen({super.key});
+  JoinusScreen({super.key});
+
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController rePasswordController = TextEditingController();
+  final controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -92,113 +104,126 @@ class JoinusScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Stack(children: [
-        Container(
-          // height: MediaQuery.of(context).size.height * .8,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 930),
-            child: Image.asset(
-              'assets/images/yello.png',
-            ),
-          ),
-        ),
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 930),
-            child: Image.asset(
-              'assets/images/person2.png',
-            ),
-          ),
-        ),
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 177,
-              top: 250,
-            ),
-            child: Text('Talk Us',
-                style: TextStyle(
-                    fontSize: 60,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-          ),
-        ),
-        Container(
-          width: 600,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 400),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'User name',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber), //<-- SEE HERE
-                ),
+      body: SingleChildScrollView(
+        child: Stack(children: [
+          Container(
+            // height: MediaQuery.of(context).size.height * .8,
+            // height: 9000,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 930),
+              child: Image.asset(
+                'assets/images/yello.png',
               ),
             ),
           ),
-        ),
-        Container(
-          width: 600,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 450),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'your Email',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber), //<-- SEE HERE
-                ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 930),
+              child: Image.asset(
+                'assets/images/person2.png',
               ),
             ),
           ),
-        ),
-        Container(
-          width: 600,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 500),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'password',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber), //<-- SEE HERE
-                ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 177,
+                top: 150,
               ),
+              child: Text('Talk Us',
+                  style: TextStyle(
+                      fontSize: 60,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
             ),
           ),
-        ),
-        Container(
-          width: 600,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 560),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Confirom password',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber), //<-- SEE HERE
-                ),
+          Padding(
+            padding: const EdgeInsets.only(top: 270),
+            child: Form(
+              key: formKey,
+              child: Column(
+                
+                children: [
+                  AuthTextFormFeild(
+                    hintText: 'user name',
+                    obscureText: false,
+                    controller: nameController,
+                    validator: (value) {
+                      if (value.toString().isEmpty) {
+                        return 'Enter your name ';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+              
+                  AuthTextFormFeild(
+                    hintText: 'Your Email',
+                    obscureText: false,
+                    controller: emailController,
+                    validator: (value) {
+                      if (!RegExp(validationEmail).hasMatch(value)) {
+                        return 'Invalid Email';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  AuthTextFormFeild(
+                    hintText: 'Password',
+                    obscureText: true,
+                    controller: passwordController,
+                    validator: (value) {
+                      if (!RegExp(validationPassword).hasMatch(value)) {
+                        return 'Password length must be 8 and contain a number,\n a special symbol, and an uppercase letter.';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  AuthTextFormFeild(
+                    hintText: 'Password',
+                    obscureText: true,
+                    controller: passwordController,
+                    validator: (value) {
+                      if (value != passwordController.text) {
+                        return 'The entered password does not match.';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
-          ),
-        ),
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 300, top: 660),
-            child: ElevatedButton(
-              child: Text(
-                'Log in',
-                style: TextStyle(fontSize: 18, color: Colors.black),
-              ),
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.amber,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2)),
-                  side: BorderSide(
-                      width: 2, color: Color.fromARGB(255, 223, 189, 88)),
-                  padding: EdgeInsets.all(20)),
-              onPressed: () {},
-            ),
-          ),
-        )
-      ]),
+          )
+         ,
+          GetBuilder<AuthController>(
+            builder: (_) {
+              return AuthButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    String email = emailController.text.trim();
+                    String password = passwordController.text;
+                    String name = nameController.text;
+      
+                    controller.signUpUsingFirebase(
+                        email: email, password: password, name: name);
+      
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Center(child: CircularProgressIndicator());
+                      },
+                    );
+                  }
+                },
+                text: 'Sign up',
+              );
+            },
+          )
+        ]),
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 class CoachImage extends StatelessWidget {
   CoachImage({
@@ -17,13 +18,13 @@ class CoachImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-             Container(
+        Container(
           child: Padding(
             padding: const EdgeInsets.only(left: 190, top: 270),
             child: Image.asset(
               'assets/images/blackcercle.png',
-              width: 250,
-              height: 250,
+              width: 20.w,
+              height: 20.h,
             ),
           ),
         ),
@@ -32,8 +33,8 @@ class CoachImage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 205, top: 284),
             child: Image.asset(
               '${image}',
-              width: 220,
-              height: 220,
+              width: 20.w,
+              height: 20.h,
             ),
           ),
         ),
